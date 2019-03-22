@@ -16,7 +16,7 @@ module.exports = {
     app.use(
       '/scripts/mermaid.min.js',
       express.static(
-        path.resolve(rootPath, 'node_modules/mermaid/dist/mermaid.min.js')
+        path.resolve(path.dirname(require.resolve('mermaid')), 'mermaid.min.js')
       )
     )
 
