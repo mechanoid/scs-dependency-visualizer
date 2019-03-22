@@ -7,7 +7,7 @@ html(lang="en")
   body
     
     form.filters(action="#" method="GET")
-      - const clients = filters && filters.clients || []
+      - const client = filters && filters.client
       - const connections = filters && filters.connections || []
       - const filterComponents = filters && filters.filterComponents || []
       
@@ -15,13 +15,13 @@ html(lang="en")
         legend Clients
         label 
           | Device
-          input(type="checkbox" name="clients" value="device" checked=(clients.length === 0 || clients.indexOf('device') >= 0))
+          input(type="radio" name="client" value="device" checked=client === 'device')
         label 
           | iOS/Android
-          input(type="checkbox" name="clients" value="mobile" checked=(clients.length === 0 || clients.indexOf('mobile') >= 0))
+          input(type="radio" name="client" value="mobile" checked=client === 'mobile')
         label 
           | Browser
-          input(type="checkbox" name="clients" value="browser" checked=(clients.length === 0 || clients.indexOf('browser') >= 0))
+          input(type="radio" name="client" value="browser" checked=client === 'browser')
         input(type="submit")
       
       fieldset 

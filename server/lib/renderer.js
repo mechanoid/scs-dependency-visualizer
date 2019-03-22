@@ -11,6 +11,9 @@ const filtersPropertyContainsItem = (item, filters, itemType, filterProperty) =>
   filters[filterProperty] &&
   filters[filterProperty].indexOf(item[itemType]) < 0
 
+const clientIsFiltered = (item, filters) =>
+  item.clientType && filters.client && item.clientType !== filters.client
+
 module.exports = (components, filters) => {
   let dependencyIndex = 0
 
@@ -71,9 +74,7 @@ module.exports = (components, filters) => {
   }
 
   const renderComponentDependencies = (component, filters) => {
-    if (
-      filtersPropertyContainsItem(component, filters, 'clientType', 'clients')
-    ) {
+    if (clientIsFiltered(component, filters)) {
       return ''
     }
 
@@ -107,11 +108,7 @@ module.exports = (components, filters) => {
       .join('\n')
 
   const renderComponent = (component, filters, layer) => {
-    if (
-      component.clientType &&
-      filters.clients &&
-      filters.clients.indexOf(component.clientType) < 0
-    ) {
+    if (clientIsFiltered(component, filters)) {
       return ''
     }
 

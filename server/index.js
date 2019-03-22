@@ -16,8 +16,8 @@ module.exports = componentDefinitionPath => {
   })
 
   app.get('/', (req, res) => {
-    const { clients, connections, filterComponents } = req.query
-    const filters = { clients, connections, filterComponents }
+    const { client, connections, filterComponents } = req.query
+    const filters = { client, connections, filterComponents }
 
     const rendered = renderer(components, filters)
 
