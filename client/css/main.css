@@ -1,0 +1,16 @@
+* {
+  box-siz: border-box;
+}
+
+.filters {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  width: 30%;
+  background-color: white;
+  padding: 1rem;
+}
+
+.filters label {
+  padding-right: 1rem;
+}

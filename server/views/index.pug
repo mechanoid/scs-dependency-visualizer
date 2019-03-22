@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    title SCS Dependency Visualizer
+    link(rel="stylesheet" href="./css/main.css")
+  body
+    
+    form.filters(action="#" method="GET")
+      - const clients = filters && filters.clients || []
+      - const connections = filters && filters.connections || []
+      - const filterComponents = filters && filters.filterComponents || []
+      
+      fieldset
+        legend Clients
+        label 
+          | Device
+          input(type="checkbox" name="clients" value="device" checked=(clients.length === 0 || clients.indexOf('device') >= 0))
+        label 
+          | iOS/Android
+          input(type="checkbox" name="clients" value="mobile" checked=(clients.length === 0 || clients.indexOf('mobile') >= 0))
+        label 
+          | Browser
+          input(type="checkbox" name="clients" value="browser" checked=(clients.length === 0 || clients.indexOf('browser') >= 0))
+        input(type="submit")
+      
+      fieldset 
+        legend Connections
+        label 
+          | Pass Through
+          input(type="checkbox" name="connections" value="pass_through" checked=(connections.length === 0 || connections.indexOf('pass_through') >= 0))
+        label
+          | API
+          input(type="checkbox" name="connections" value="api" checked=connections.length === 0 || connections.indexOf('api') >= 0)
+        label
+          | SSI
+          input(type="checkbox" name="connections" value="ssi" checked=connections.length === 0 || connections.indexOf('ssi') >= 0)
+        label
+          | CSI
+          input(type="checkbox" name="connections" value="csi" checked=connections.length === 0 || connections.indexOf('csi') >= 0)
+    
+      fieldset
+        legend Components
+        each component in components
+          label 
+            input(type="checkbox" name="filterComponents" value=component.name checked=(filterComponents.length === 0 || filterComponents.indexOf(component.name) >= 0))
+            = component.name
+            br
+            
+    
+    div.mermaid= rendered
+    pre.debug-mermaid= rendered
+
+    script(defer src="./scripts/mermaid.min.js")
+    script(defer src="./scripts/main.js")
+  
