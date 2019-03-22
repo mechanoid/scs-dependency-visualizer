@@ -20,7 +20,6 @@ args.option(
 
 const flags = args.parse(process.argv)
 
-console.log(flags)
 const componentDefinitionPath = path.resolve(
   process.cwd(),
   flags.componentDefinition
