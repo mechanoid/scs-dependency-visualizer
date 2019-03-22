@@ -3,7 +3,7 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     title SCS Dependency Visualizer
-    link(rel="stylesheet" href="./css/main.css")
+    link(rel="stylesheet" href=`${appPath}/css/main.css`)
   body
     
     form.filters(action="#" method="GET")
@@ -51,6 +51,6 @@ html(lang="en")
     div.mermaid= rendered
     pre.debug-mermaid= rendered
 
-    script(defer src="./scripts/mermaid.min.js")
-    script(defer src="./scripts/main.js")
+    script(defer src=`${appPath}/scripts/mermaid.min.js`)
+    script(defer src=`${appPath}/scripts/main.js`)
   
