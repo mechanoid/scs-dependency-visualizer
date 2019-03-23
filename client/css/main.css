@@ -2,6 +2,10 @@
   box-siz: border-box;
 }
 
+body {
+  padding-right: 35%;
+}
+
 .filters {
   position: absolute;
   top: 2rem;

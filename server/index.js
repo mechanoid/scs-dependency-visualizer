@@ -15,13 +15,18 @@ module.exports = componentDefinitionPath => {
     return c
   })
 
+  const clients = data.clients || []
+  const connectionTypes = data.connectionTypes || []
+
   app.get('/', (req, res) => {
     const { client, connections, filterComponents } = req.query
     const filters = { client, connections, filterComponents }
-
+    filters.client = filters.client || clients[0]
     const rendered = renderer(components, filters)
 
     res.render('index.pug', {
+      clients,
+      connectionTypes,
       rendered,
       filters,
       components,

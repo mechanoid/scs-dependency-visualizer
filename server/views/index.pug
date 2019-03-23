@@ -7,38 +7,24 @@ html(lang="en")
   body
     
     form.filters(action="#" method="GET")
-      - const client = filters && filters.client
+      - const filterClient = filters && filters.client
       - const connections = filters && filters.connections || []
       - const filterComponents = filters && filters.filterComponents || []
       
       fieldset
         legend Clients
-        label 
-          | Device
-          input(type="radio" name="client" value="device" checked=client === 'device')
-        label 
-          | iOS/Android
-          input(type="radio" name="client" value="mobile" checked=client === 'mobile')
-        label 
-          | Browser
-          input(type="radio" name="client" value="browser" checked=client === 'browser')
-        input(type="submit")
-      
+        each client, index in clients
+          label 
+            = client
+            input(type="radio" name="client" value=client checked=(index === 0 ? !filterClient || filterClient === client : filterClient === client))
+
       fieldset 
         legend Connections
-        label 
-          | Pass Through
-          input(type="checkbox" name="connections" value="pass_through" checked=(connections.length === 0 || connections.indexOf('pass_through') >= 0))
-        label
-          | API
-          input(type="checkbox" name="connections" value="api" checked=connections.length === 0 || connections.indexOf('api') >= 0)
-        label
-          | SSI
-          input(type="checkbox" name="connections" value="ssi" checked=connections.length === 0 || connections.indexOf('ssi') >= 0)
-        label
-          | CSI
-          input(type="checkbox" name="connections" value="csi" checked=connections.length === 0 || connections.indexOf('csi') >= 0)
-    
+        each connectionType, index in connectionTypes
+          label
+            = connectionType
+            input(type="checkbox" name="connections" value=connectionType checked=(connections.length === 0 || connections.indexOf(connectionType) >= 0))
+
       fieldset
         legend Components
         each component in components
@@ -46,10 +32,12 @@ html(lang="en")
             input(type="checkbox" name="filterComponents" value=component.name checked=(filterComponents.length === 0 || filterComponents.indexOf(component.name) >= 0))
             = component.name
             br
+      
+      input(type="submit")
             
     
     div.mermaid= rendered
-    pre.debug-mermaid= rendered
+    //- pre.debug-mermaid= rendered
 
     script(defer src=`${appPath}/scripts/mermaid.min.js`)
     script(defer src=`${appPath}/scripts/main.js`)
