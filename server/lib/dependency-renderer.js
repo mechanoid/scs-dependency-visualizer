@@ -4,9 +4,12 @@ const csiStyle = index =>
   `linkStyle ${index} stroke:#f03,stroke-width:2px,stroke-dasharray:2;`
 
 const dependencyIsNotFiltered = filters => dependency =>
-  dependency.type &&
-  filters.connections &&
-  filters.connections.indexOf(dependency.type) >= 0
+  !dependency.type ||
+  !filters.connections ||
+  !filters.connections.length === 0 ||
+  (dependency.type &&
+    filters.connections &&
+    filters.connections.indexOf(dependency.type) >= 0)
 
 const renderDependencyWithIndex = () => {
   let dependencyIndex = 0
