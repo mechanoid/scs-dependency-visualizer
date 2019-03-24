@@ -4,6 +4,7 @@ const fs = require('fs')
 const yaml = require('js-yaml')
 
 const renderer = require('./lib/renderer.js')
+const resourceRenderer = require('./lib/resource-renderer.js')
 
 module.exports = componentDefinitionPath => {
   const app = require('./lib/app.js').app
@@ -34,8 +35,44 @@ module.exports = componentDefinitionPath => {
     })
   })
 
+  const componentsWithResources = c => {
+    return (c.components || [])
+      .reduce((memo, c) => memo.concat(componentsWithResources(c)), [])
+      .concat(c.resources ? c : [])
+      .filter(isNotEmptyArray)
+  }
+
+  app.get('/resources', (req, res) => {
+    const { selectedComponent } = req.query
+
+    const resourceComponents = components
+      .reduce((memo, c) => memo.concat(componentsWithResources(c)), [])
+      .filter(isNotEmptyArray)
+
+    const component = selectedComponent
+      ? resourceComponents.find(c => c.name === selectedComponent)
+      : resourceComponents[0]
+
+    const rendered = resourceRenderer(resourceComponents, component)
+
+    res.render('resource.pug', {
+      rendered,
+      selectedComponent,
+      resourceComponents,
+      appPath: app.path()
+    })
+  })
+
   return {
     app,
     bindStaticAssets: require('./lib/app.js').bindStaticAssets
+  }
+}
+
+function isNotEmptyArray (item) {
+  if (item instanceof Array) {
+    return item.length > 0
+  } else {
+    return true
   }
 }
