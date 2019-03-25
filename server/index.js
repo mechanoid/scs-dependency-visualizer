@@ -32,7 +32,8 @@ module.exports = componentDefinitionPath => {
       rendered,
       filters,
       components,
-      appPath: app.path()
+      appPath: app.path(),
+      req
     })
   })
 
@@ -64,7 +65,8 @@ module.exports = componentDefinitionPath => {
       rendered,
       selectedComponent,
       resourceComponents,
-      appPath: app.path()
+      appPath: app.path(),
+      req
     })
   })
 

@@ -1,4 +1,6 @@
+mixin nav-link(path, label)
+  a(href=`${appPath}${path}` class=(`${appPath}${req.path}` === `${appPath}${path}`) ? 'active': '')= label
+
 nav
-  = req
-  a(href=`${appPath}/`) Dependency Flow
-  a(href=`${appPath}/resources`) Resource Sequences
+  +nav-link('/', "Dependency Flow")
+  +nav-link('/resources', "Resource Sequences")
