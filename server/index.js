@@ -22,6 +22,7 @@ module.exports = componentDefinitionPath => {
 
   app.get('/', (req, res) => {
     const { client, connections, filterComponents } = req.query
+    const hideFilters = req.query['hide-filters']
     const filters = { client, connections, filterComponents }
     filters.client = filters.client || clients[0]
     const rendered = renderer(components, filters)
@@ -32,6 +33,7 @@ module.exports = componentDefinitionPath => {
       rendered,
       filters,
       components,
+      hideFilters,
       appPath: app.path(),
       req
     })
@@ -46,7 +48,7 @@ module.exports = componentDefinitionPath => {
 
   app.get('/resources', (req, res) => {
     const { selectedComponent } = req.query
-
+    const hideFilters = req.query['hide-filters']
     const resourceComponents = components
       .reduce((memo, c) => memo.concat(componentsWithResources(c)), [])
       .filter(isNotEmptyArray)
@@ -65,6 +67,7 @@ module.exports = componentDefinitionPath => {
       rendered,
       selectedComponent,
       resourceComponents,
+      hideFilters,
       appPath: app.path(),
       req
     })

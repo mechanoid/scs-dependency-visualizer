@@ -4,7 +4,7 @@ html(lang="en")
     meta(charset="UTF-8")
     title SCS Dependency Visualizer
     link(rel="stylesheet" href=`${appPath}/css/main.css`)
-  body
+  body(class=(!!hideFilters ? 'hidden-filters' : ''))
     include nav
     main
       form.filters(action="#" method="GET")
@@ -12,6 +12,11 @@ html(lang="en")
         - const connections = filters && filters.connections || []
         - const filterComponents = filters && filters.filterComponents || []
         
+        div.toggle-bar
+          label.filter-toggle
+            | hide filters
+            input(type="checkbox" name="hide-filters" value="true" checked=(!!hideFilters))
+          
         fieldset
           legend Clients
           each client, index in clients

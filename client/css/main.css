@@ -15,10 +15,6 @@ body {
   padding: 1rem;
 }
 
-.filters label {
-  padding-right: 1rem;
-}
-
 main {
   display: block;
   position: relative;
@@ -38,4 +34,25 @@ nav a {
 
 nav a.active {
   text-decoration: underline;
+}
+
+.hidden-filters .filters fieldset {
+  display: none;
+}
+
+.hidden-filters main {
+  padding-right: 0;
+}
+
+.filter-toggle {
+  border: 1px solid black;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 0.5rem 0.3rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.toggle-bar {
+  text-align: right;
 }
