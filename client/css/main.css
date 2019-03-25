@@ -18,3 +18,20 @@ body {
 .filters label {
   padding-right: 1rem;
 }
+
+main {
+  position: relative;
+}
+
+nav {
+  padding: 1rem;
+}
+
+nav a {
+  padding-right: 1rem;
+  text-decoration: none;
+}
+
+nav a.active {
+  text-decoration: underline;
+}

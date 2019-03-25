@@ -5,39 +5,40 @@ html(lang="en")
     title SCS Dependency Visualizer
     link(rel="stylesheet" href=`${appPath}/css/main.css`)
   body
-    
-    form.filters(action="#" method="GET")
-      - const filterClient = filters && filters.client
-      - const connections = filters && filters.connections || []
-      - const filterComponents = filters && filters.filterComponents || []
-      
-      fieldset
-        legend Clients
-        each client, index in clients
-          label 
-            = client
-            input(type="radio" name="client" value=client checked=(index === 0 ? !filterClient || filterClient === client : filterClient === client))
+    include nav
+    main
+      form.filters(action="#" method="GET")
+        - const filterClient = filters && filters.client
+        - const connections = filters && filters.connections || []
+        - const filterComponents = filters && filters.filterComponents || []
+        
+        fieldset
+          legend Clients
+          each client, index in clients
+            label 
+              = client
+              input(type="radio" name="client" value=client checked=(index === 0 ? !filterClient || filterClient === client : filterClient === client))
 
-      fieldset 
-        legend Connections
-        each connectionType, index in connectionTypes
-          label
-            = connectionType
-            input(type="checkbox" name="connections" value=connectionType checked=(connections.length === 0 || connections.indexOf(connectionType) >= 0))
+        fieldset 
+          legend Connections
+          each connectionType, index in connectionTypes
+            label
+              = connectionType
+              input(type="checkbox" name="connections" value=connectionType checked=(connections.length === 0 || connections.indexOf(connectionType) >= 0))
 
-      fieldset
-        legend Components
-        each component in components
-          label 
-            input(type="checkbox" name="filterComponents" value=component.name checked=(filterComponents.length === 0 || filterComponents.indexOf(component.name) >= 0))
-            = component.name
-            br
+        fieldset
+          legend Components
+          each component in components
+            label 
+              input(type="checkbox" name="filterComponents" value=component.name checked=(filterComponents.length === 0 || filterComponents.indexOf(component.name) >= 0))
+              = component.name
+              br
+        
+        input(type="submit")
+              
       
-      input(type="submit")
-            
-    
-    div.mermaid= rendered
-    //- pre.debug-mermaid= rendered
+      div.mermaid= rendered
+      //- pre.debug-mermaid= rendered
 
     script(defer src=`${appPath}/scripts/mermaid.min.js`)
     script(defer src=`${appPath}/scripts/main.js`)

@@ -5,22 +5,22 @@ html(lang="en")
     title SCS Dependency Visualizer
     link(rel="stylesheet" href=`${appPath}/css/main.css`)
   body
+    include nav
+    main
+      form.filters(action="#" method="GET")
+        fieldset
+          legend Components with Resources
+          each resourceComponent, index in resourceComponents
+            label
+              = resourceComponent.name
+              input(type="radio" name="selectedComponent" value=resourceComponent.name checked=(index === 0 && !selectedComponent ? true : resourceComponent.name === selectedComponent))
+            br
     
-    form.filters(action="#" method="GET")
-      fieldset
-        legend Components with Resources
-        each resourceComponent, index in resourceComponents
-          label
-            = resourceComponent.name
-            input(type="radio" name="selectedComponent" value=resourceComponent.name checked=(index === 0 && !selectedComponent ? true : resourceComponent.name === selectedComponent))
-          br
-
-    
-      input(type="submit")
-            
-    
-    div.mermaid= rendered
-    pre.debug-mermaid= rendered
+        input(type="submit")
+              
+      
+      div.mermaid= rendered
+      //- pre.debug-mermaid= rendered
 
     script(defer src=`${appPath}/scripts/mermaid.min.js`)
     script(defer src=`${appPath}/scripts/main.js`)

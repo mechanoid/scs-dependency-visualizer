@@ -18,6 +18,7 @@ module.exports = componentDefinitionPath => {
 
   const clients = data.clients || []
   const connectionTypes = data.connectionTypes || []
+  const syncConnections = data.syncConnections || []
 
   app.get('/', (req, res) => {
     const { client, connections, filterComponents } = req.query
@@ -53,7 +54,11 @@ module.exports = componentDefinitionPath => {
       ? resourceComponents.find(c => c.name === selectedComponent)
       : resourceComponents[0]
 
-    const rendered = resourceRenderer(resourceComponents, component)
+    const rendered = resourceRenderer(
+      resourceComponents,
+      component,
+      syncConnections
+    )
 
     res.render('resource.pug', {
       rendered,
