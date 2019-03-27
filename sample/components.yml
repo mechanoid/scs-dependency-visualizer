@@ -38,9 +38,17 @@ components:
       - name: system-aa
         dependencies:
           - component: system-ab
+        resources:
+          - relName: system-aa:link-rel-1
+            dependencies:
+              - component: system-ab
+                relName: system-bb:link-rel-1
+          - relName: system-aa:link-rel-2
       - name: system-ab
         dependencies:
           - component: system-ac
+        resources:
+          - relName: system-bb:link-rel-1
       - name: system-ac
 
   - name: system-group-b

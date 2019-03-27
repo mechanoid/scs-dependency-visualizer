@@ -24,7 +24,8 @@ html(lang="en")
         input(type="submit")
               
       
-      div.mermaid= rendered
+      div.resource-sequences!= rendered
+      //- div.mermaid= rendered
       //- pre.debug-mermaid= rendered
 
     script(defer src=`${appPath}/scripts/mermaid.min.js`)

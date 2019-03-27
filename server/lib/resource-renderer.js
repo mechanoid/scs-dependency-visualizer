@@ -28,21 +28,26 @@ const renderResources = (components, syncConnections) => {
   }
 
   const renderResource = (component, r, root = false) => `
-    ${root ? `Note left of ${keyName(component.name)}: ${r.relName}` : ''}
+    ${
+  root
+    ? `<div class="mermaid">
+      sequenceDiagram`
+    : ''
+}
+        ${root ? `Note left of ${keyName(component.name)}: ${r.relName}` : ''}
 
-    participant ${keyName(component.name)} as ${component.name}
-    ${root ? `activate ${keyName(component.name)}` : ''}
-    ${(r.dependencies || [])
+        participant ${keyName(component.name)} as ${component.name}
+        ${root ? `activate ${keyName(component.name)}` : ''}
+        ${(r.dependencies || [])
     .map(renderSequenceForDependency(component, r))
     .join('\n')}
-    ${root ? `deactivate ${keyName(component.name)}` : ''}
+        ${root ? `deactivate ${keyName(component.name)}` : ''}
+        ${root ? '</div>' : ''}
     `
 
   return component =>
     component.resources.map(r => renderResource(component, r, true)).join('\n')
 }
 
-module.exports = (components, component, syncConnections) => `
-  sequenceDiagram
-    ${renderResources(components, syncConnections)(component)}
-`
+module.exports = (components, component, syncConnections) =>
+  renderResources(components, syncConnections)(component)
