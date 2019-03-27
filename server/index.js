@@ -49,19 +49,18 @@ module.exports = componentDefinitionPath => {
   app.get('/resources', (req, res) => {
     const { selectedComponent } = req.query
     const hideFilters = req.query['hide-filters']
-    const resourceComponents = components
-      .reduce((memo, c) => memo.concat(componentsWithResources(c)), [])
-      .filter(isNotEmptyArray)
+    const resourceComponents =
+      components
+        .reduce((memo, c) => memo.concat(componentsWithResources(c)), [])
+        .filter(isNotEmptyArray) || []
 
     const component = selectedComponent
       ? resourceComponents.find(c => c.name === selectedComponent)
       : resourceComponents[0]
 
-    const rendered = resourceRenderer(
-      resourceComponents,
-      component,
-      syncConnections
-    )
+    const rendered = component
+      ? resourceRenderer(resourceComponents, component, syncConnections)
+      : ''
 
     res.render('resource.pug', {
       rendered,
