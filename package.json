@@ -7,7 +7,9 @@
   "bin": {
     "scs-dependency-visualizer": "bin/scs-dependency-visualizer.js"
   },
-  "scripts": {},
+  "scripts": {
+    "start": "scs-dependency-visualizer -c sample/components.yml -p 5678"
+  },
   "description": "",
   "devDependencies": {
     "eslint": "^5.15.3",

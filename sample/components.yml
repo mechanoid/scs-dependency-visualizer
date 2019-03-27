@@ -1,0 +1,55 @@
+clients:
+  - browser
+  - mobile
+
+connectionTypes:
+  - client_request
+  - pass_through
+  - api
+
+.client-request-system-system-a: &client-request-2-system-aa
+  component: system-aa
+  type: client_request
+
+.client-request-2-system-b: &client-request-2-system-bd
+  component: system-bd
+  type: client_request
+
+components:
+  - name: browser-client
+    clientType: browser
+    dependencies:
+      - *client-request-2-system-aa
+      - *client-request-2-system-bd
+
+  - name: iOS
+    clientType: mobile
+    dependencies:
+      - *client-request-2-system-aa
+
+  - name: Android
+    clientType: mobile
+    dependencies:
+      - *client-request-2-system-bd
+
+  - name: system-group-a
+    type: group
+    components:
+      - name: system-aa
+        dependencies:
+          - component: system-ab
+      - name: system-ab
+        dependencies:
+          - component: system-ac
+      - name: system-ac
+
+  - name: system-group-b
+    type: group
+    components:
+      - name: system-bd
+        dependencies:
+          - component: system-be
+      - name: system-be
+        dependencies:
+          - component: system-bf
+      - name: system-bf

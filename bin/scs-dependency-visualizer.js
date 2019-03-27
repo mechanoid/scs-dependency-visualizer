@@ -18,6 +18,11 @@ args.option(
   }
 )
 
+args.option(
+  'port',
+  'the server port, where the service is listening to. Manually exporting PORT also works'
+)
+
 const flags = args.parse(process.argv)
 
 const componentDefinitionPath = path.resolve(
@@ -31,12 +36,20 @@ if (!fs.existsSync(componentDefinitionPath)) {
   )
 }
 
-const app = require('../server/index.js')(componentDefinitionPath)
+const dependencyVisualizer = require('../server/index.js')(
+  componentDefinitionPath
+)
 
-if (!process.env.PORT) {
-  throw new Error('environment variable for "PORT" is missing')
+const port = flags.port || process.env.PORT
+
+if (!port) {
+  throw new Error(
+    'environment variable for "PORT" or command-line arg --port / -p is missing'
+  )
 }
 
-app.listen(process.env.PORT, () => {
-  console.log(`listen to ${process.env.PORT}`)
+dependencyVisualizer.bindStaticAssets()
+
+dependencyVisualizer.app.listen(port, () => {
+  console.log(`listen to ${port}`)
 })
