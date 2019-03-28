@@ -18,6 +18,7 @@ const renderDependencyWithIndex = () => {
     const currentIndex = dependencyIndex
     dependencyIndex += 1
 
+    // TODO: as types are dynamic now. This has to be relied on a configuration as well.
     if (dependency.type === 'csi') {
       return `${component.name} -. ${dependency.relName} .-> ${
         dependency.component
