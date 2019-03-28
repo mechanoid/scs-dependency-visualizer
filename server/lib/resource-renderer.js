@@ -30,12 +30,13 @@ const renderResources = (components, syncConnections) => {
   const renderResource = (component, r, root = false) => `
     ${
   root
-    ? `<div class="mermaid">
+    ? `
+      <h3>${r.relName}</h3>
+      <div class="mermaid">
+
       sequenceDiagram`
     : ''
 }
-        ${root ? `Note left of ${keyName(component.name)}: ${r.relName}` : ''}
-
         participant ${keyName(component.name)} as ${component.name}
         ${root ? `activate ${keyName(component.name)}` : ''}
         ${(r.dependencies || [])
