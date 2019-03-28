@@ -32,6 +32,12 @@ const renderDependencyWithIndex = () => {
           ${ssiStyle(currentIndex)}`
     }
 
+    if (dependency.relName) {
+      return `${component.name} -->|${dependency.relName}| ${
+        dependency.component
+      }`
+    }
+
     return `${component.name} --> ${dependency.component}`
   }
 }
@@ -72,8 +78,11 @@ const renderComponentDependencies = (component, filters, renderDependency) => {
   return [
     component.dependencies &&
       renderDependencies(component, filters, renderDependency),
+
+    // TODO: make resource rendering in flow diagram toggleable
     component.resources &&
       renderResources(component, filters, renderDependency),
+
     component.components &&
       renderComponentsDependencies(
         component.components,
