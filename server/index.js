@@ -1,26 +1,21 @@
 require('dotenv').config()
 
-const fs = require('fs')
-const yaml = require('js-yaml')
-
 const renderer = require('./lib/renderer.js')
 const resourceRenderer = require('./lib/resource-renderer.js')
+const componentLoader = require('./lib/component-loader.js')
 
-module.exports = componentDefinitionPath => {
+const targetComponentsPath = defaultPath => req =>
+  req.query['components-path'] || defaultPath
+
+module.exports = defaultComponentDefinitionPath => {
   const app = require('./lib/app.js').app
-
-  const data = yaml.safeLoad(fs.readFileSync(componentDefinitionPath, 'utf8'))
-
-  const components = (data.components || []).map(c => {
-    c.filterable = true // only root level components can be filtered out
-    return c
-  })
-
-  const clients = data.clients || []
-  const connectionTypes = data.connectionTypes || []
-  const syncConnections = data.syncConnections || []
+  const componentsPath = targetComponentsPath(defaultComponentDefinitionPath)
 
   app.get('/', (req, res) => {
+    const { components, clients, connectionTypes } = componentLoader(
+      componentsPath(req)
+    )
+
     const { client, connections, filterComponents } = req.query
     const hideFilters = req.query['hide-filters']
     const filters = { client, connections, filterComponents }
@@ -47,6 +42,8 @@ module.exports = componentDefinitionPath => {
   }
 
   app.get('/resources', (req, res) => {
+    const { components, syncConnections } = componentLoader(componentsPath(req))
+
     const { selectedComponent } = req.query
     const hideFilters = req.query['hide-filters']
     const resourceComponents =
