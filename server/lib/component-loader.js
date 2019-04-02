@@ -3,15 +3,18 @@ const yaml = require('js-yaml')
 const fetch = require('node-fetch')
 
 const resolve = async componentDefinition =>
-  fetch(componentDefinition.uri).then(res => {
-    if (res.ok) {
-      return res
-    }
+  fetch(componentDefinition.uri)
+    .then(res => {
+      if (res.ok) {
+        return res
+      }
 
-    throw new Error(
-      `'Component Definition could not be loaded. Status: ${res.status}`
-    )
-  })
+      throw new Error(
+        `'Component Definition could not be loaded. Status: ${res.status}`
+      )
+    })
+    .then(res => res.text())
+    .then(text => yaml.safeLoad(text))
 
 module.exports = async componentDefinition => {
   const data =
