@@ -1,9 +1,11 @@
-const fs = require('fs')
+const URL = require('url').URL
+
+// const fs = require('fs')
 const yaml = require('js-yaml')
 const fetch = require('node-fetch')
 
 const resolve = async componentDefinition =>
-  fetch(componentDefinition.uri)
+  fetch(componentDefinition)
     .then(res => {
       if (res.ok) {
         return res
@@ -16,11 +18,10 @@ const resolve = async componentDefinition =>
     .then(res => res.text())
     .then(text => yaml.safeLoad(text))
 
-module.exports = async componentDefinition => {
-  const data =
-    typeof componentDefinition === 'string'
-      ? yaml.safeLoad(fs.readFileSync(componentDefinition, 'utf8'))
-      : await resolve(componentDefinition)
+module.exports = async (componentDefinitionUrl, { host }) => {
+  const absoluteUrl = new URL(componentDefinitionUrl, host) // if componentDefinitionUrl is absolute, baseUrl host is ignored
+
+  const data = await resolve(absoluteUrl)
 
   const components = (data.components || []).map(c => {
     c.filterable = true // only root level components can be filtered out

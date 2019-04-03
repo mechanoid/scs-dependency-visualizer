@@ -1,6 +1,33 @@
 mixin nav-link(path, label)
   a(href=`${appPath}${path}` class=(`${appPath}${req.path}` === `${appPath}${path}`) ? 'active': '')= label
 
-nav
+  //- const pathSegment = definition.slug || slug(definition.name)
+  //- 
+  //- if (pathSegment === 'resources') {
+  //-   throw new Error('definition name resources is not allowed')
+  //- }
+  //- 
+  //- const fullPath = path.join(currentRootPath, pathSegment)
+
+
+mixin definition-links(definitions, rootPath = '/')
+  ul
+    each definition in definitions
+      - const pathSegment = definition.slug || slug(definition.name)
+      - const fullPath = path.join(rootPath, pathSegment)
+      
+      li
+        a(href=`${appPath}${fullPath}`)= definition.name
+        if definition.definitions
+          +definition-links(definition.definitions, fullPath)
+      
+nav.component-definitions
+  +definition-links(config.definitions)
+  
+    
+  
+  
+  
+nav.diagram-variants
   +nav-link('/', "Dependency Flow")
   +nav-link('/resources', "Resource Sequences")

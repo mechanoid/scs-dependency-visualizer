@@ -1,6 +1,8 @@
+const path = require('path')
 const renderer = require('./renderer.js')
 const resourceRenderer = require('./resource-renderer.js')
 const componentLoader = require('./component-loader.js')
+const slug = require('slug')
 
 const isNotEmptyArray = item => {
   if (item instanceof Array) {
@@ -27,11 +29,15 @@ const getSelectedOrFirstComponent = (selectedComponent, components) =>
     ? components.find(c => c.name === selectedComponent)
     : components[0]
 
-module.exports = (app, defaultComponentDefinition) => ({
+const host = req =>
+  `${req.protocol}://${req.headers['x-forwarded-for'] || req.headers.host}`
+
+module.exports = (config, componentDefinitionUrl, { appPath, rootConfig }) => ({
   flowDiagramController: async (req, res, next) => {
     try {
       const { components, clients, connectionTypes } = await componentLoader(
-        defaultComponentDefinition
+        componentDefinitionUrl,
+        { host: host(req) }
       )
 
       const { client, connections, filterComponents } = req.query
@@ -48,8 +54,11 @@ module.exports = (app, defaultComponentDefinition) => ({
         filters,
         components,
         hideFilters,
-        appPath: app.path(),
-        req
+        appPath,
+        req,
+        config: rootConfig,
+        slug,
+        path
       })
     } catch (e) {
       next(e)
@@ -59,7 +68,8 @@ module.exports = (app, defaultComponentDefinition) => ({
   sequenceDiagramController: async (req, res, next) => {
     try {
       const { components, syncConnections } = await componentLoader(
-        defaultComponentDefinition
+        componentDefinitionUrl,
+        { host: host(req) }
       )
 
       const { selectedComponent } = req.query
@@ -80,8 +90,11 @@ module.exports = (app, defaultComponentDefinition) => ({
         selectedComponent,
         resourceComponents,
         hideFilters,
-        appPath: app.path(),
-        req
+        appPath,
+        req,
+        config: rootConfig,
+        slug,
+        path
       })
     } catch (e) {
       next(e)

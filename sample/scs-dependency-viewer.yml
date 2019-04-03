@@ -1,0 +1,8 @@
+definitions:
+  - name: local definition # served via --static
+    slug: local-definition
+    href: /sample/components.yml
+
+    definitions:
+      - name: remote definition
+        href: http://localhost:5678/sample/components.yml

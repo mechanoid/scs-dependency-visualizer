@@ -6,12 +6,12 @@ const fs = require('fs')
 const args = require('args')
 
 args.option(
-  'component-definition',
-  'the component configuration that the resulting graph will based on.',
+  'config',
+  'the definition configuration path. A file defining which component defintions are available.',
   '',
   val => {
     if (val === '') {
-      throw new Error('Option "--component-definition" or "-c" is mandatory')
+      throw new Error('Option "--config" or "-c" is mandatory')
     }
 
     return val
@@ -23,22 +23,26 @@ args.option(
   'the server port, where the service is listening to. Manually exporting PORT also works'
 )
 
-const flags = args.parse(process.argv)
-
-const componentDefinitionPath = path.resolve(
-  process.cwd(),
-  flags.componentDefinition
+args.option(
+  'static',
+  `local path, relative to the invoked process, that will be served static in the mounted application root in the form of mount-path=folder-path`
 )
 
-if (!fs.existsSync(componentDefinitionPath)) {
+const flags = args.parse(process.argv)
+
+const configPath = path.resolve(process.cwd(), flags.config)
+
+if (!fs.existsSync(configPath)) {
   throw new Error(
-    `Component definition in ${componentDefinitionPath} is not existing`
+    `SCS Dependency Viewer Config in ${configPath} is not existing`
   )
 }
 
-const dependencyVisualizer = require('../server/index.js')(
-  componentDefinitionPath
-)
+const dependencyVisualizer = require('../server/index.js')(configPath, {
+  static: staticMountConfig(flags)
+})
+
+dependencyVisualizer.bindStaticAssets()
 
 const port = flags.port || process.env.PORT
 
@@ -48,8 +52,25 @@ if (!port) {
   )
 }
 
-dependencyVisualizer.bindStaticAssets()
-
 dependencyVisualizer.app.listen(port, () => {
   console.log(`listen to ${port}`)
 })
+
+function staticMountConfig (flags) {
+  if (!flags.static) {
+    return null
+  }
+
+  const [mountPath, fileDirectory] = flags.static.split('=')
+
+  if (!path.isAbsolute(mountPath)) {
+    throw new Error(
+      'mount-path fragment first part of --static / -s must be absolute'
+    )
+  }
+
+  return {
+    mountPath,
+    fileDirectory
+  }
+}
