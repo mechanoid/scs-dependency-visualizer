@@ -4,6 +4,8 @@ html(lang="en")
     meta(charset="UTF-8")
     title SCS Dependency Visualizer
     link(rel="stylesheet" href=`${appPath}/css/main.css`)
+    script.
+      document.documentElement && document.documentElement.classList && document.documentElement.classList.add('js');
   body(class=(!!hideFilters ? 'hidden-filters' : ''))
     include nav
     main

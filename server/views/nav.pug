@@ -8,12 +8,15 @@ mixin definition-links(definitions, rootPath = '/')
       - const fullPath = path.join(rootPath, pathSegment)
       
       li
-        a(href=`${appPath}${fullPath}` class=(definitionPath(`${appPath}${req.path}`) === definitionPath(`${appPath}${fullPath}`)) ? 'active': '')= definition.name
+        - const isActive = definitionPath(`${appPath}${req.path}`) === definitionPath(`${appPath}${fullPath}`)
+        a(href=isActive ? null : `${appPath}${fullPath}` class=isActive ? 'active': '')= definition.name
         if definition.definitions
           +definition-links(definition.definitions, fullPath)
       
 nav.component-definitions
+  h3 Definitions
   +definition-links(config.definitions)
+  button(type="button" class="opening-button") open menu
   
 nav.diagram-variants
   +nav-link(`${definitionPath(req.originalUrl)}`, "Dependency Flow")
