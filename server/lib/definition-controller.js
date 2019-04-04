@@ -1,3 +1,4 @@
+const URL = require('url').URL
 const path = require('path')
 const renderer = require('./renderer.js')
 const resourceRenderer = require('./resource-renderer.js')
@@ -32,6 +33,11 @@ const getSelectedOrFirstComponent = (selectedComponent, components) =>
 const host = req =>
   `${req.protocol}://${req.headers['x-forwarded-for'] || req.headers.host}`
 
+const definitionPath = req => {
+  const currentUrl = new URL(req.originalUrl, 'http://fubar')
+  return currentUrl.pathname.replace(/(.*)\/resources\/?/, '$1')
+}
+
 module.exports = (config, componentDefinitionUrl, { appPath, rootConfig }) => ({
   flowDiagramController: async (req, res, next) => {
     try {
@@ -58,7 +64,8 @@ module.exports = (config, componentDefinitionUrl, { appPath, rootConfig }) => ({
         req,
         config: rootConfig,
         slug,
-        path
+        path,
+        definitionPath
       })
     } catch (e) {
       next(e)
@@ -94,7 +101,8 @@ module.exports = (config, componentDefinitionUrl, { appPath, rootConfig }) => ({
         req,
         config: rootConfig,
         slug,
-        path
+        path,
+        definitionPath
       })
     } catch (e) {
       next(e)
