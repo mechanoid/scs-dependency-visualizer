@@ -8,7 +8,7 @@ mixin definition-links(definitions, rootPath = '/')
       - const fullPath = path.join(rootPath, pathSegment)
       
       li
-        a(href=`${appPath}${fullPath}`)= definition.name
+        a(href=`${appPath}${fullPath}` class=(definitionPath(`${appPath}${req.path}`) === definitionPath(`${appPath}${fullPath}`)) ? 'active': '')= definition.name
         if definition.definitions
           +definition-links(definition.definitions, fullPath)
       
@@ -16,5 +16,5 @@ nav.component-definitions
   +definition-links(config.definitions)
   
 nav.diagram-variants
-  +nav-link(`${definitionPath(req)}`, "Dependency Flow")
-  +nav-link(`${definitionPath(req)}/resources`, "Resource Sequences")
+  +nav-link(`${definitionPath(req.originalUrl)}`, "Dependency Flow")
+  +nav-link(`${definitionPath(req.originalUrl)}/resources`, "Resource Sequences")

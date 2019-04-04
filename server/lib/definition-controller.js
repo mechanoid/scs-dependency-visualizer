@@ -33,8 +33,8 @@ const getSelectedOrFirstComponent = (selectedComponent, components) =>
 const host = req =>
   `${req.protocol}://${req.headers['x-forwarded-for'] || req.headers.host}`
 
-const definitionPath = req => {
-  const currentUrl = new URL(req.originalUrl, 'http://fubar')
+const definitionPath = uriPath => {
+  const currentUrl = new URL(uriPath, 'http://fubar')
   return currentUrl.pathname.replace(/(.*)\/resources\/?/, '$1')
 }
 
