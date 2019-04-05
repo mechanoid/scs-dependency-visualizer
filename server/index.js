@@ -22,11 +22,10 @@ module.exports = (configPath, options = {}) => {
     throw new Error('provided config does not contain any definitions')
   }
 
-  buildRoutesForDefinitions(app, config)
-
   return {
     app,
-    bindStaticAssets: require('./lib/app.js').bindStaticAssets
+    bindStaticAssets: require('./lib/app.js').bindStaticAssets,
+    bindRoutes: () => buildRoutesForDefinitions(app, config)
   }
 }
 

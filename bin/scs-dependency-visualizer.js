@@ -43,6 +43,7 @@ const dependencyVisualizer = require('../server/index.js')(configPath, {
 })
 
 dependencyVisualizer.bindStaticAssets()
+dependencyVisualizer.bindRoutes()
 
 const port = flags.port || process.env.PORT
 
