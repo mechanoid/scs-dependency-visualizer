@@ -34,7 +34,7 @@ function buildRoutesForDefinitions (app, config, rootConfig = config) {
   const currentRootPath = config.rootPath || ''
 
   config.definitions.forEach((definition, index) => {
-    const controller = definitionController(config, definition.href, {
+    const controller = definitionController(definition, definition.href, {
       appPath: app.path(),
       rootConfig
     })

@@ -2,7 +2,27 @@ definitions:
   - name: local definition # served via --static
     slug: local-definition
     href: /sample/components.yml
+    secret: my-basic-auth
 
     definitions:
       - name: remote definition
         href: http://localhost:5678/sample/components.yml
+        secret: my-cookie-secret
+
+secrets:
+  my-basic-auth:
+    type: basic-auth
+    # config:
+    #   user: cleartext_user
+    #   password: cleartext_password
+    env-based:
+      user: USER_ENV_VAR_NAME
+      password: PASSWORD_ENV_VAR_NAME
+  my-cookie-secret:
+    type: cookie-secret
+    # config:
+    #   cookieName: cleartext_user
+    #   cookieValue: cleartext_
+    env-based:
+      cookieName: COOKIE_NAME_ENV_VAR_NAME
+      cookieValue: COOKIE_VALUE_ENV_VAR_NAME

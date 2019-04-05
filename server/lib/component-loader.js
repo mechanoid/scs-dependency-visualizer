@@ -1,11 +1,15 @@
 const URL = require('url').URL
+const base64 = require('base-64')
 
 // const fs = require('fs')
 const yaml = require('js-yaml')
 const fetch = require('node-fetch')
 
-const resolve = async componentDefinition =>
-  fetch(componentDefinition)
+const resolve = async (componentDefinition, secretConfig, headers = {}) =>
+  fetch(componentDefinition, {
+    redirect: 'follow',
+    headers: Object.assign({}, headers, secretConfig)
+  })
     .then(res => {
       if (res.ok) {
         return res
@@ -18,10 +22,87 @@ const resolve = async componentDefinition =>
     .then(res => res.text())
     .then(text => yaml.safeLoad(text))
 
-module.exports = async (componentDefinitionUrl, { host }) => {
+const getCredentials = secretConfig =>
+  secretConfig['env-based']
+    ? [secretConfig['env-based'], true]
+    : [secretConfig['config'], false]
+
+const basicAuthSecret = secretConfig => {
+  const [credentials, isEnvBased] = getCredentials(secretConfig)
+
+  const userName = isEnvBased ? process.env[credentials.user] : credentials.user
+  const password = isEnvBased
+    ? process.env[credentials.user]
+    : credentials.password
+
+  if (!userName || !password) {
+    throw new Error(`secret "${secretConfig.name}" is missing user or password`)
+  }
+
+  return {
+    Authorization: `basic ${base64.encode(`${userName}:${password}`)}`
+  }
+}
+
+const cookieSecret = secretConfig => {
+  const [credentials, isEnvBased] = getCredentials(secretConfig)
+
+  const cookieName = isEnvBased
+    ? process.env[credentials.cookieName]
+    : credentials.cookieName
+  const cookieValue = isEnvBased
+    ? process.env[credentials.cookieValue]
+    : credentials.cookieValue
+
+  if (!cookieName || !cookieValue) {
+    throw new Error(
+      `secret "${secretConfig.name}" is missing cookieName or cookieValue`
+    )
+  }
+
+  return {
+    Cookie: `${cookieName}=${cookieValue}`
+  }
+}
+
+const secretConfigForDefinition = (secret, secrets) => {
+  if (secret && secrets) {
+    if (!secrets || !secrets[secret]) {
+      throw new Error(
+        `secret with name "${secret}" is not available in secrets`
+      )
+    }
+
+    const secretConfig = secrets[secret]
+    secretConfig.name = secret
+
+    switch (secretConfig.type) {
+      case 'basic-auth':
+        return basicAuthSecret(secretConfig)
+      case 'cookie-secret':
+        return cookieSecret(secretConfig)
+    }
+
+    return secretConfig
+  } else {
+    console.log('no secret')
+  }
+
+  return {}
+}
+
+module.exports = async (
+  componentDefinitionUrl,
+  { host, config, rootConfig }
+) => {
   const absoluteUrl = new URL(componentDefinitionUrl, host) // if componentDefinitionUrl is absolute, baseUrl host is ignored
 
-  const data = await resolve(absoluteUrl)
+  const secretConfig = secretConfigForDefinition(
+    config.secret,
+    rootConfig.secrets
+  )
+
+  const data = await resolve(absoluteUrl, secretConfig)
 
   const components = (data.components || []).map(c => {
     c.filterable = true // only root level components can be filtered out

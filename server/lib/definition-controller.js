@@ -43,7 +43,7 @@ module.exports = (config, componentDefinitionUrl, { appPath, rootConfig }) => ({
     try {
       const { components, clients, connectionTypes } = await componentLoader(
         componentDefinitionUrl,
-        { host: host(req) }
+        { host: host(req), config, rootConfig }
       )
 
       const { client, connections, filterComponents } = req.query
@@ -76,7 +76,7 @@ module.exports = (config, componentDefinitionUrl, { appPath, rootConfig }) => ({
     try {
       const { components, syncConnections } = await componentLoader(
         componentDefinitionUrl,
-        { host: host(req) }
+        { host: host(req), config, rootConfig }
       )
 
       const { selectedComponent } = req.query

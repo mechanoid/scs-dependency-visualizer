@@ -13,7 +13,7 @@ mixin definition-links(definitions, rootPath = '/')
         if definition.definitions
           +definition-links(definition.definitions, fullPath)
       
-nav.component-definitions
+nav.component-definitions(class=(`${appPath}${req.path}` === `${appPath}/` ? 'open' : ''))
   h3 Definitions
   +definition-links(config.definitions)
   button(type="button" class="opening-button") open menu
