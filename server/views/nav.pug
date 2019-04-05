@@ -1,5 +1,5 @@
 mixin nav-link(path, label)
-  a(href=path class=(`${appPath}${req.path}` === `${appPath}${path}`) ? 'active': '')= label
+  a(href=path class=(`${definitionPath(req.originalUrl, false)}` === definitionPath(path, false)) ? 'active': '')= label
 
 mixin definition-links(definitions, rootPath = '/')
   ul
@@ -13,7 +13,7 @@ mixin definition-links(definitions, rootPath = '/')
         if definition.definitions
           +definition-links(definition.definitions, fullPath)
       
-nav.component-definitions(class=(`${appPath}${req.path}` === `${appPath}/` ? 'open' : ''))
+nav.component-definitions(class=(`${definitionPath(req.originalUrl)}` === `${appPath}` || `${definitionPath(req.originalUrl)}` === `${appPath}/resources` ? 'open' : ''))
   h3 Definitions
   +definition-links(config.definitions)
   button(type="button" class="opening-button") open menu
