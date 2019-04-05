@@ -1,6 +1,6 @@
 {
   "name": "scs-dependency-visualizer",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "server/index.js",
   "author": "Falk Hoppe <falkhoppe81@gmail.com>",
   "license": "Apache-2.0",
