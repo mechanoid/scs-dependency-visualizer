@@ -31,7 +31,7 @@ const getSelectedOrFirstComponent = (selectedComponent, components) =>
     : components[0]
 
 const host = req =>
-  `${req.protocol}://${req.headers['x-forwarded-for'] || req.headers.host}`
+  `${req.protocol}://${req.headers['x-forwarded-host'] || req.headers.host}`
 
 const stripPendingSlash = resultPath => resultPath.replace(/^(.*)\/$/, '$1')
 
