@@ -24,11 +24,6 @@ module.exports = (configPath, options) => {
 
   buildRoutesForDefinitions(app, config)
 
-  //
-  // app.get('/:component_definition_name', controller.flowDiagramController)
-  //
-  // app.get('/resources', controller.sequenceDiagramController)
-
   return {
     app,
     bindStaticAssets: require('./lib/app.js').bindStaticAssets
@@ -38,7 +33,7 @@ module.exports = (configPath, options) => {
 function buildRoutesForDefinitions (app, config, rootConfig = config) {
   const currentRootPath = config.rootPath || ''
 
-  config.definitions.forEach(definition => {
+  config.definitions.forEach((definition, index) => {
     const controller = definitionController(config, definition.href, {
       appPath: app.path(),
       rootConfig
@@ -51,6 +46,11 @@ function buildRoutesForDefinitions (app, config, rootConfig = config) {
     }
 
     const fullPath = path.join(currentRootPath, pathSegment)
+
+    if (index === 0) {
+      app.get(`/`, controller.flowDiagramController)
+      app.get(`/resources`, controller.sequenceDiagramController)
+    }
 
     app.get(`/${fullPath}`, controller.flowDiagramController)
     app.get(`/${fullPath}/resources`, controller.sequenceDiagramController)
