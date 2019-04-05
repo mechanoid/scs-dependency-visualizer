@@ -33,12 +33,16 @@ const getSelectedOrFirstComponent = (selectedComponent, components) =>
 const host = req =>
   `${req.protocol}://${req.headers['x-forwarded-for'] || req.headers.host}`
 
+const stripPendingSlash = resultPath => resultPath.replace(/^(.*)\/$/, '$1')
+
 const definitionPath = (uriPath, stripResources = true) => {
   const currentUrl = new URL(uriPath, 'http://fubar')
   if (stripResources) {
-    return currentUrl.pathname.replace(/(.*)\/resources\/?/, '$1')
+    return stripPendingSlash(
+      currentUrl.pathname.replace(/(.*)\/resources\/?/, '$1')
+    )
   } else {
-    return currentUrl.pathname
+    return stripPendingSlash(currentUrl.pathname)
   }
 }
 
