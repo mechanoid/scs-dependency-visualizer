@@ -8,7 +8,7 @@ const app = require('./lib/app.js').app
 const definitionController = require('./lib/definition-controller.js')
 const configLoader = require('./lib/config-loader.js')
 
-module.exports = (configPath, options) => {
+module.exports = (configPath, options = {}) => {
   if (options.static) {
     const dirPath = path.resolve(process.cwd(), options.static.fileDirectory)
 

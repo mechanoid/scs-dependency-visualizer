@@ -1,15 +1,22 @@
 const URL = require('url').URL
 const base64 = require('base-64')
 
-// const fs = require('fs')
 const yaml = require('js-yaml')
 const fetch = require('node-fetch')
 
-const resolve = async (componentDefinition, secretConfig, headers = {}) =>
-  fetch(componentDefinition, {
+const resolve = async (
+  componentDefinition,
+  secretConfig,
+  customHeaders = {}
+) => {
+  const headers = Object.assign({}, customHeaders, secretConfig)
+
+  const options = {
     redirect: 'follow',
-    headers: Object.assign({}, headers, secretConfig)
-  })
+    headers
+  }
+
+  return fetch(componentDefinition.href, options)
     .then(res => {
       if (res.ok) {
         return res
@@ -21,6 +28,7 @@ const resolve = async (componentDefinition, secretConfig, headers = {}) =>
     })
     .then(res => res.text())
     .then(text => yaml.safeLoad(text))
+}
 
 const getCredentials = secretConfig =>
   secretConfig['env-based']
@@ -32,7 +40,7 @@ const basicAuthSecret = secretConfig => {
 
   const userName = isEnvBased ? process.env[credentials.user] : credentials.user
   const password = isEnvBased
-    ? process.env[credentials.user]
+    ? process.env[credentials.password]
     : credentials.password
 
   if (!userName || !password) {
@@ -50,6 +58,7 @@ const cookieSecret = secretConfig => {
   const cookieName = isEnvBased
     ? process.env[credentials.cookieName]
     : credentials.cookieName
+
   const cookieValue = isEnvBased
     ? process.env[credentials.cookieValue]
     : credentials.cookieValue
@@ -84,8 +93,6 @@ const secretConfigForDefinition = (secret, secrets) => {
     }
 
     return secretConfig
-  } else {
-    console.log('no secret')
   }
 
   return {}
